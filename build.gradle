@@ -1,0 +1,47 @@
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3'
+    wrapper.distributionType = Wrapper.DistributionType.ALL
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+		// Util
+		compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+		compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+		compile group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '1.1.0'
+		compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'	
+    }
+}
+
+project(':denodo-api-webapp') {
+    dependencies {
+        // Spring Boot
+		compile("org.springframework.boot:spring-boot-starter")
+        // compile('org.springframework.boot:spring-boot-starter-actuator')
+        // compile('org.springframework.boot:spring-boot-starter-data-jpa') {
+        //     exclude group: 'org.hibernate' // Included Hibernate doesn't support java.time properly
+        // }
+        // compile('org.springframework.boot:spring-boot-starter-mail')
+        // compile('org.springframework.boot:spring-boot-starter-security')
+        compile('org.springframework.boot:spring-boot-starter-validation')
+        compile('org.springframework.boot:spring-boot-starter-web')
+        // compile('org.springframework.boot:spring-boot-starter-web-services')
+        //  runtime('org.springframework.boot:spring-boot-devtools')
+
+        // DB
+        // compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.12.Final'
+        runtime('com.h2database:h2')
+        runtime('com.microsoft.sqlserver:mssql-jdbc')
+
+        // Test
+		testCompile group: 'org.testng', name: 'testng', version: '6.11'
+		testCompile('org.springframework.boot:spring-boot-starter-test')
+        // testCompile('org.springframework.security:spring-security-test')
+    }
+}

@@ -1,0 +1,24 @@
+#=======================================================================================================================
+#== SPRING =============================================================================================================
+#=======================================================================================================================
+
+server.port: 9088 # TODO Ask for an available port at DEV
+
+logging:
+  file: logs/denodo-api.log
+  pattern:
+      console: "%d %-5level %logger : %msg%n"
+      file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate: DEBUG
+    com.nepc: DEBUG
+
+#=======================================================================================================================
+#== JDBC ===============================================================================================================
+#=======================================================================================================================
+
+spring.datasource.url: jdbc:vdb://denodo1:9999/gft_staging?user=gftUser&password=summer12893*^
+spring.datasource.username: gftuser
+spring.datasource.password: summer12893*^
+spring.datasource.driver-class-name: com.denodo.vdp.jdbc.Driver

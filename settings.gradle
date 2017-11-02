@@ -1,0 +1,3 @@
+rootProject.name = 'denodo-api'
+
+include ':denodo-api-webapp'
