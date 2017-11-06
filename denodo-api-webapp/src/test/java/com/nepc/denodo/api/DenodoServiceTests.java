@@ -7,6 +7,7 @@ import com.nepc.denodo.api.entity.ClientPlan;
 import com.nepc.denodo.api.exception.NepcDenodoException;
 import com.nepc.denodo.api.service.DenodoService;
 import com.nepc.denodo.api.service.impl.dev.DenodoServiceJdbcTemplateImpl;
+import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,10 +53,10 @@ public class DenodoServiceTests
 	DenodoServiceJdbcTemplateImpl impl;
 	@BeforeMethod
 	public void setUp() throws Exception
-	{
+	{ modelMapper = new ModelMapper();
 		MockitoAnnotations.initMocks(this);
 		this.denodoService = new DenodoServiceJdbcTemplateImpl(jdbcTemplate, modelMapper);
-		impl = new DenodoServiceJdbcTemplateImpl( jdbcTemplate,modelMapper);
+
 	}
 
 	@Test
@@ -73,16 +74,18 @@ public class DenodoServiceTests
 		 * calling test method,with dummy values
 		 */
        //when
-
 		List<ClientPlanDto>	expected = denodoService.getAllClientPlans();
-		Assert.assertTrue(expected.size() >= 0);
 		//assertEquals(actual,expected);
+
+		//then
+		Assert.assertTrue(expected.size() >= 0);
 	}
 	@Test
 	public void testgetAllAsOfDates()throws NepcDenodoException{
 //		given
 		LocalDate sampleDate = LocalDate.of(2015, 12, 31);
 		asOfDateDto.setLocalDate(sampleDate);
+		asOfDate.setLocalDate(sampleDate);
 		List<AsOfDateDto>actual = new ArrayList<AsOfDateDto>();
 		actual.add(asOfDateDto);
 		/**
@@ -90,15 +93,14 @@ public class DenodoServiceTests
 		 */
 		//when
 		List<AsOfDateDto> expected = denodoService.getAllAsOfDates();
-		Assert.assertTrue(expected.size() >= 0);
+		when(modelMapper.map(asOfDate, AsOfDateDto.class)).thenReturn(asOfDateDto);
 		//assertEquals(actual,expected);
+
 		/*
 		* varify that function excuting the code succesfully or not*/
 		// Then
-
-//		verify(jdbcTemplate.query("SELECT * FROM dv_if_asofdates_stg", (rs, rowNum) -> new AsOfDate(rs, rowNum))
-//						.stream().map(asOfDate -> modelMapper.map(asOfDate, AsOfDateDto.class)).collect(Collectors.toList()).size()>1);
-		//verify(modelMapper).map(AsOfDate.class, AsOfDateDto.class);
-//		verify(modelMapper, times(1)).map(asOfDate, asOfDateDto.class);
+		Assert.assertTrue(expected.size() >= 0);
+		//verify(modelMapper, Mockito.times(1)).map(asOfDate, AsOfDateDto.class);
+		verify(jdbcTemplate, Mockito.times(1));
 	}
 }
