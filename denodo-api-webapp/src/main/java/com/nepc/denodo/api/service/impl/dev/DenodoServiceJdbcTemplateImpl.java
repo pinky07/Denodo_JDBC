@@ -38,6 +38,10 @@ public class DenodoServiceJdbcTemplateImpl implements DenodoService
 	public List<ClientPlanDto> getAllClientPlans()
 	{
 		log.info("Querying dv_clientplanlist");
+		List<ClientPlanDto> dto =jdbcTemplate.query("SELECT * FROM dv_clientplanlist ", (rs, rowNum) -> new ClientPlan(rs, rowNum))
+				.stream().map(clientPlan -> modelMapper.map(clientPlan, ClientPlanDto.class))
+				.collect(Collectors.toList());
+		System.out.println(dto.size());
 		return jdbcTemplate.query("SELECT * FROM dv_clientplanlist ", (rs, rowNum) -> new ClientPlan(rs, rowNum))
 				.stream().map(clientPlan -> modelMapper.map(clientPlan, ClientPlanDto.class))
 				.collect(Collectors.toList());
@@ -47,7 +51,9 @@ public class DenodoServiceJdbcTemplateImpl implements DenodoService
 	public List<AsOfDateDto> getAllAsOfDates()
 	{
 		log.info("Querying bv_if_asofdates_stg");
+
 		return jdbcTemplate.query("SELECT * FROM dv_if_asofdates_stg", (rs, rowNum) -> new AsOfDate(rs, rowNum))
 				.stream().map(asOfDate -> modelMapper.map(asOfDate, AsOfDateDto.class)).collect(Collectors.toList());
+
 	}
 }
