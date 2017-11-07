@@ -7,7 +7,10 @@ import com.nepc.denodo.api.entity.ClientPlan;
 import com.nepc.denodo.api.exception.NepcDenodoException;
 import com.nepc.denodo.api.service.DenodoService;
 import com.nepc.denodo.api.service.impl.dev.DenodoServiceJdbcTemplateImpl;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,8 +19,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
@@ -36,21 +39,21 @@ import static org.testng.Assert.assertTrue;
 import static org.springframework.test.web.client.ExpectedCount.times;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
-
+@RunWith(MockitoJUnitRunner.class)
 public class DenodoServiceTests
 {
 	ClientPlanDto clientPlanDto = new ClientPlanDto();
 	AsOfDateDto asOfDateDto = new AsOfDateDto();
 	ClientPlan clientPlan= new ClientPlan();
 	AsOfDate asOfDate = new AsOfDate();
-	@Mock
-	@Autowired DenodoService denodoService;
+
 	@Mock
 	private JdbcTemplate jdbcTemplate;
 	@Mock
 	private ModelMapper modelMapper;
-	@Mock
-	DenodoServiceJdbcTemplateImpl impl;
+	@InjectMocks//class under test
+			DenodoService denodoService=new DenodoServiceJdbcTemplateImpl(jdbcTemplate, modelMapper);
+	DenodoServiceJdbcTemplateImpl impl= new DenodoServiceJdbcTemplateImpl(jdbcTemplate, modelMapper);
 	@BeforeMethod
 	public void setUp() throws Exception
 	{ modelMapper = new ModelMapper();
@@ -86,8 +89,11 @@ public class DenodoServiceTests
 		LocalDate sampleDate = LocalDate.of(2015, 12, 31);
 		asOfDateDto.setLocalDate(sampleDate);
 		asOfDate.setLocalDate(sampleDate);
+
 		List<AsOfDateDto>actual = new ArrayList<AsOfDateDto>();
+		List<AsOfDateDto> dtos = Arrays.asList(asOfDateDto);
 		actual.add(asOfDateDto);
+		//stub(denodoService.getAllAsOfDates()).toReturn(dtos);
 		/**
 		 * calling test method,with dummy values
 		 */
